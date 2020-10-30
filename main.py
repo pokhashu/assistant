@@ -13,11 +13,24 @@ import requests
 from bs4 import BeautifulSoup as bs
 import random
 import wikipedia as wiki
+import json
 
-voice = pyttsx3.init()
+with open('settings.json', 'r') as f:
+	settings = json.load(f)
+
+ASSISTANT_VOICE_man = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Alan+Aleksandr'
+ASSISTANT_VOICE_woman = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_RU-RU_IRINA_11.0' #'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Irina'
+voice = pyttsx3.init(driverName='sapi5') 
 voice.setProperty('rate', 175)
 voice.setProperty('volume', 0.9)
-voice.setProperty('voice', 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Irina')
+voice.setProperty('voice', ASSISTANT_VOICE_woman)
+if settings['assistant_voice'] == 'woman':
+	voice.setProperty('voice', ASSISTANT_VOICE_woman)
+elif settings['assistant_voice'] == 'man':
+	voice.setProperty('voice', ASSISTANT_VOICE_man) #ИЗМЕНИТЬ
+else:
+	voice.setProperty('voice', ASSISTANT_VOICE_woman)
+
 
 opts = {
     "exit": ('goodbye', 'bye', 'qq', 'выход', 'выйти', 'выйди', 'закончить', 'пока', 'прощай',
@@ -101,6 +114,41 @@ symbs = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890!@#$%^&*(
 def say(string):
     voice.say(str(string))
     voice.runAndWait()
+
+
+def settings_json(action, key, added_item=None):
+	global settings
+	with open('settings.json', 'r') as f:
+		settings = json.load(f)
+	if action == 'add':
+		settings[key] = added_item
+		with open('settings.json', 'w') as f:
+			json.dump(settings, f)
+	elif action == 'dlt':
+		settings[key] = None
+		with open('settings.json', 'w') as f:
+			json.dump(settings, f)
+	elif action == 'edit':
+		settings[key] = added_item
+		with open('settings.json', 'w') as f:
+			json.dump(settings, f)
+	else:
+		return 0
+	with open('settings.json', 'r') as f:
+		settings = json.load(f)
+
+	return 1
+
+
+def assistant_voice_change():
+	if settings['assistant_voice'] == 'woman':
+		voice.setProperty('voice', ASSISTANT_VOICE_woman)
+	elif settings['assistant_voice'] == 'man':
+		voice.setProperty('voice', ASSISTANT_VOICE_man)
+	else:
+		voice.setProperty('voice', ASSISTANT_VOICE_woman)
+		
+	return 1
 
 
 def holiday():
@@ -281,5 +329,4 @@ def thnx_repl():
                   'надеюсь помогла']
 
     return random.choice(thnxs_repl)
-
 
