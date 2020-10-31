@@ -58,9 +58,10 @@ opts = {
     "exes": ('програм', 'приложен'),
     "entry_words": ("Привет", "Bonjour", "Здравствуй", "Рада видеть тебя снова", "Я уж думала не придёшь"),
 	"exit_words": ("Ciao",  "Goodbye", "Пока", "До скорого", "До свидания", "До встречи"),
-	"thnxs": ('спасибо', 'благодарю'),
-	"rudes": ('дура', 'стерв', 'дуро'),
-	"helloes": ('привет', 'здравствуй')
+	"thnxs": ('пасиб', 'благодар'),
+	"rudes": ('дур', 'стерв', 'сук', 'нах', 'скотин', 'сволоч', 'паскуд'), #убрал пару лишних окончаний и добавил новые маты
+	"helloes": ('привет', 'здравствуй'),
+    "news": ('новост', 'news', 'событ') # добавил словарь для новостей
 }
 
 
@@ -328,7 +329,7 @@ def wikipedia(query):  # TODO except func
     return txt[ : txt.find("\n")]
 
 
-def rude_repl():
+def rudes_repl(): # не было различий
     rudes_repl = ['так говорить неприлично', 'обидно так-то', 'ну зачем вы так', 'не хорошо так выражаться']
 
     return random.choice(rudes_repl)
@@ -340,6 +341,9 @@ def thnx_repl():
 
     return random.choice(thnxs_repl)
 
+def hello():
+    helloes = ['Здравствуй', 'Bonjour', 'Привет', 'Рада тебя видеть']
+    return random.choice(helloes)
 
 def news():
     r = requests.get('https://news.tut.by/world')
@@ -365,6 +369,12 @@ def news():
 
 
 def main(request):
+    for el in opts['helloes']:
+        if el in request:
+            print(hello())
+    for el in opts['thnxs']:
+        if el in request:
+            print(thnx_repl())
     for el in opts['coronavirus']:
     	if el in request:
     		print(coronavirus())
@@ -374,6 +384,12 @@ def main(request):
     for el in opts['tales']:
     	if el in request:
     		print(tale())
+    for el in opts['news']:
+        if el in request:
+            print(news())
+    for el in opts['rudes']:
+        if el in request:
+            print(rudes_repl())
     for el in opts['exit']:
     	if el in request:
     		print(exit_function())
