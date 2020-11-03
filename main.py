@@ -63,7 +63,8 @@ opts = {
     "helloes": ('привет', 'здравствуй'),
     "news": ('новост', 'news', 'событ'), 
     "voice": ('голос'),
-    "user_name": ('пользовател')
+    "user_name": ('пользовател'),
+    "calculator": ('калькулятор')
 }
 
 
@@ -357,6 +358,68 @@ def news():
     
     return res
 
+def calculator(var, a: int, b: int):
+    while True:
+        if var == "+":
+            while True:
+                if a == 'x':
+                    break
+                if b == 'x':
+                    break
+                try:
+                    result = 'result = ' + str(int(a) + int(b))
+                except ValueError:
+                    print('Ошибка! Вы ввели букву, или пропуск.')
+                    print('Повторите попытку, введя число')
+                else:
+                    break
+
+        elif var == "+":
+            while True:
+                if a == 'x':
+                    break
+                if b == 'x':
+                    break
+                try:
+                    result = 'result = ' + str(int(a) - int(b))
+                except ValueError:
+                    print('Ошибка! Вы ввели букву, или пропуск.')
+                    print('Повторите попытку, введя число')
+                else:
+                    break
+
+        elif var == "+":
+            while True:
+                if a == 'x':
+                    break
+                if b == 'x':
+                    break
+                try:
+                    result = 'result = ' + str(int(a) * int(b))
+                except ValueError:
+                    print('Ошибка! Вы ввели букву, или пропуск.')
+                    print('Повторите попытку, введя число')
+                else:
+                    break
+
+        if var == "/":
+            while True:
+                if a == 'x':
+                    break
+                if b == 'x':
+                    break
+                try:
+                    result = 'result = ' + str(int(a) * int(b))
+                except ValueError:
+                    print('Ошибка! Вы ввели букву, или пропуск.')
+                    print('Повторите попытку, введя число')
+                else:
+                    break
+                except ZeroDivisionError:
+                    print('Ошибка! На ноль делить нельзя!')
+        if var == 'x':
+            break
+        return result
 
 # def exchange_rates():
 #     r = requests.get('https://myfin.by/currency/minsk')
@@ -377,6 +440,14 @@ def main(request):
     for el in opts['thnxs']:
         if el in request:
             print(thnx_repl())
+    for el in opts['calculator']:
+        if el in request:
+            print('Введите вариант')
+            calc_var = input('>> ')
+            first_num = input('Первое число\n>> ')
+            second_num = input('Второе число\n>> ')
+            print(calculator(calc_var, first_num, second_num))
+
     for el in opts['holiday']:
         if el in request:
             print(holiday())
