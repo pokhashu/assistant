@@ -10,6 +10,7 @@ import time
 # import subprocess
 # from pygame import mixer
 
+from sound import Sound
 import webbrowser
 import pyttsx3
 import requests
@@ -38,7 +39,7 @@ opts = {
     "exit": ('goodbye', 'bye', 'qq', 'выход', 'выйти', 'выйди', 'закончить', 'пока', 'прощай',
              'досвидания', 'завершение', 'покедово'),
     "names": ('kylie', 'кайли'),  
-    # "tbd": ('сколько', 'который', 'какой', 'какая', 'что', 'хочу', 'сегодня', 'расскажи'.
+    # "tbd": ('сколько', 'который', 'какой', 'какая', 'что', 'хочу', 'сегодня', 'расскажи', 'установи',
     #         'какое', 'добавь', 'напиши', 'давай', 'статистика', 'статистику по', 'смени'),
     "dialogue": ('говор', 'болта'),
     "coronavirus": ('corona', 'virus', 'covid', 'коронавирус', 'ковид'),
@@ -65,14 +66,9 @@ opts = {
     "voice": ('голос'),
     "user_name": ('пользовател'),
     "calculator": ('калькулятор'),
-    "search": ('найди', 'найти', 'поищи', 'ищи')
-	"exit_words": ("Ciao",  "Goodbye", "Пока", "До скорого", "До свидания", "До встречи"),
-	"thnxs": ('пасиб', 'благодар'),
-	"rudes": ('дур', 'стерв', 'сук', 'нах', 'скотин', 'сволоч', 'паскуд', 'хуй'), #убрал пару лишних окончаний и добавил новые маты
-	"helloes": ('привет', 'здравствуй'),
-    "news": ('новост', 'news', 'событ'), # добавил словарь для новостей
-    "voice": ('голос'),
-    "user_name": ('пользовател')
+    "search": ('найди', 'найти', 'поищи', 'ищи'),
+    "vol": ('громкост')
+
 }
 
 
@@ -356,6 +352,9 @@ def hello():
     helloes = ['Здравствуй', 'Bonjour', 'Привет', 'Рада тебя видеть']
     return random.choice(helloes)
 
+def brows(sear):
+    webbrowser.open_new_tab('https://www.google.by/search?q=' + str(sear))
+
 def news():
     r = requests.get('https://news.tut.by/world')
     html = bs(r.content, 'html.parser')
@@ -364,29 +363,19 @@ def news():
     for el in html.select('.entry-head')[8:13:]:
         res.append(el.text.replace('\xa0', ' '))
     
-    return res
-    	res.append(el.text.replace('\xa0', ' '))
-    print('Новости на данный момент')
-    for i in res:
-        print('- ', i) #слегка изменил функцию новостей
+    return res 
 
-#def calculator(var, a: int, b: int):
-#    if var == "+":
-#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) + int(b)))
-#
-#    elif var == "+":
-#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) - int(b)))
-#
-#    elif var == "+":
-#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) * int(b)))
-#
-#    elif var == "/":
-#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) * int(b)))
-#
-#    elif var == 'x':
-#        exit()
-#
-#    return result
+def calculator(var, a: int, b: int):
+    if var == "+":
+        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) + int(b)))
+    elif var == "-":
+        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) - int(b)))
+    elif var == "*":
+        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) * int(b)))
+    elif var == "/":
+        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) / int(b)))
+
+    return result
 
 # def exchange_rates():
 #     r = requests.get('https://myfin.by/currency/minsk')
@@ -404,55 +393,96 @@ def main(request):
     for el in opts['helloes']:
         if el in request:
             print(hello())
+        else:
+            break
     for el in opts['thnxs']:
         if el in request:
             print(thnx_repl())
+        else:
+            break
+    for el in opts['holiday']:
+        if el in request:
+            print(holiday())
+        else:
+            break
+    for el in opts['vol']:
+        if el in request:
+            volume = int(input('>> '))
+            Sound.volume_set(volume)
+            print('Установлена громкость системы: "' + str(volume) + '"')
+            break
+        else:
+            break
     for el in opts['search']:
         if el in request:
             search = input('Введите запрос для поисковой строки\n>> ')
             print('Открываю результат по запросу: "' + search + '"')
             time.sleep(2)
-            webbrowser.open_new_tab('https://www.google.by/search?q=' + str(search))
-#    for el in opts['calculator']:
-#        if el in request:
-#            print('Введите вариант')
-#            calc_var = input('>> ')
-#            first_num = input('Первое число\n>> ')
-#            second_num = input('Второе число\n>> ')
-#            print(calculator(calc_var, first_num, second_num))
-    for el in opts['holiday']:
+            brows(search)
+        else:
+            break
+    for el in opts['calculator']:
         if el in request:
-            print(holiday())
+            print('Введите вариант')
+            calc_var = input('>> ')
+            if calc_var == 'x':
+                print('Выключаю навык "Калькулятор"')
+                break
+            first_num = input('Первое число\n>> ')
+            second_num = input('Второе число\n>> ')
+            print(calculator(calc_var, first_num, second_num))
+        else:
+            break
     for el in opts['kost']:
         if el in request:
             print(dice())
+        else:
+            break
     for el in opts['monetka']:
         if el in request:
             print(coin())
+        else:
+            break
     for el in opts['pass_gen']:
         if el in request:
             print(pass_gen())
+        else:
+            break
     for el in opts['coronavirus']:
         if el in request:
             print(coronavirus())
+        else:
+            break
     for el in opts['jokes']:
         if el in request:
             print(joke())
+        else:
+            break
     for el in opts['tales']:
         if el in request:
             print(tale())
-    	if el in request:
-    		print(tale())
+        else:
+            break
+        if el in request:
+            print(tale())
+        else:
+            break
     for el in opts['news']:
         if el in request:
             print(news())
+        else:
+            break
     for el in opts['rudes']:
         if el in request:
             print(rudes_repl())
+        else:
+            break
     for el in opts['exit']:
         if el in request:
             print(exit_function())
             exit()
+        else:
+            break
 
 while True:
     request = input('>> ').lower()
