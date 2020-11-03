@@ -47,7 +47,7 @@ opts = {
     "jokes": ('шутк', 'анекдот', 'пошути', 'развесели', 'рассмеши'),
     "radio": ('песн', 'радио', 'музык', 'музло', 'дэнс'),
     "chname": ('имя'),
-    "monetka": ('орёл', 'решка', 'монетк'),
+    "monetka": ('орёл', 'орел', 'решк', 'монетк'),
     "kost": ('кост', 'кубик'),
     "weather": ('погод', 'weather',),
     "tales": ('сказ', 'fairy tale'),
@@ -59,7 +59,7 @@ opts = {
     "entry_words": ("Привет", "Bonjour", "Здравствуй", "Рада видеть тебя снова", "Я уж думала не придёшь"),
 	"exit_words": ("Ciao",  "Goodbye", "Пока", "До скорого", "До свидания", "До встречи"),
 	"thnxs": ('пасиб', 'благодар'),
-	"rudes": ('дур', 'стерв', 'сук', 'нах', 'скотин', 'сволоч', 'паскуд'), #убрал пару лишних окончаний и добавил новые маты
+	"rudes": ('дур', 'стерв', 'сук', 'нах', 'скотин', 'сволоч', 'паскуд', 'хуй'), #убрал пару лишних окончаний и добавил новые маты
 	"helloes": ('привет', 'здравствуй'),
     "news": ('новост', 'news', 'событ'), # добавил словарь для новостей
     "voice": ('голос'),
@@ -354,8 +354,10 @@ def news():
     html.select('.news-section')
     for el in html.select('.entry-head')[8:13:]:
     	res.append(el.text.replace('\xa0', ' '))
+    print('Новости на данный момент')
+    for i in res:
+        print('- ', i) #слегка изменил функцию новостей
 
-    return res
 
 
 # def exchange_rates():
@@ -377,6 +379,18 @@ def main(request):
     for el in opts['thnxs']:
         if el in request:
             print(thnx_repl())
+    for el in opts['holiday']:
+        if el in request:
+            print(holiday())
+    for el in opts['kost']:
+        if el in request:
+            print(dice())
+    for el in opts['monetka']:
+        if el in request:
+            print(coin())
+    for el in opts['pass_gen']:
+        if el in request:
+            print(pass_gen())
     for el in opts['coronavirus']:
     	if el in request:
     		print(coronavirus())
