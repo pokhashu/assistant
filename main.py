@@ -66,6 +66,13 @@ opts = {
     "user_name": ('пользовател'),
     "calculator": ('калькулятор'),
     "search": ('найди', 'найти', 'поищи', 'ищи')
+	"exit_words": ("Ciao",  "Goodbye", "Пока", "До скорого", "До свидания", "До встречи"),
+	"thnxs": ('пасиб', 'благодар'),
+	"rudes": ('дур', 'стерв', 'сук', 'нах', 'скотин', 'сволоч', 'паскуд', 'хуй'), #убрал пару лишних окончаний и добавил новые маты
+	"helloes": ('привет', 'здравствуй'),
+    "news": ('новост', 'news', 'событ'), # добавил словарь для новостей
+    "voice": ('голос'),
+    "user_name": ('пользовател')
 }
 
 
@@ -358,6 +365,10 @@ def news():
         res.append(el.text.replace('\xa0', ' '))
     
     return res
+    	res.append(el.text.replace('\xa0', ' '))
+    print('Новости на данный момент')
+    for i in res:
+        print('- ', i) #слегка изменил функцию новостей
 
 #def calculator(var, a: int, b: int):
 #    if var == "+":
@@ -430,6 +441,8 @@ def main(request):
     for el in opts['tales']:
         if el in request:
             print(tale())
+    	if el in request:
+    		print(tale())
     for el in opts['news']:
         if el in request:
             print(news())
@@ -440,8 +453,6 @@ def main(request):
         if el in request:
             print(exit_function())
             exit()
-
-
 
 while True:
     request = input('>> ').lower()
