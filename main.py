@@ -19,7 +19,7 @@ import wikipedia as wiki
 import json
 
 with open('settings.json', 'r') as f:
-	settings = json.load(f)
+    settings = json.load(f)
 
 ASSISTANT_VOICE_man = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Alan+Aleksandr'
 ASSISTANT_VOICE_woman = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_RU-RU_IRINA_11.0' #'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Irina'
@@ -28,18 +28,18 @@ voice.setProperty('rate', 175)
 voice.setProperty('volume', 0.9)
 voice.setProperty('voice', ASSISTANT_VOICE_woman)
 if settings['assistant_voice'] == 'woman':
-	voice.setProperty('voice', ASSISTANT_VOICE_woman)
+    voice.setProperty('voice', ASSISTANT_VOICE_woman)
 elif settings['assistant_voice'] == 'man':
-	voice.setProperty('voice', ASSISTANT_VOICE_man)
+    voice.setProperty('voice', ASSISTANT_VOICE_man)
 else:
-	voice.setProperty('voice', ASSISTANT_VOICE_woman)
+    voice.setProperty('voice', ASSISTANT_VOICE_woman)
 
 opts = {
     "exit": ('goodbye', 'bye', 'qq', 'выход', 'выйти', 'выйди', 'закончить', 'пока', 'прощай',
              'досвидания', 'завершение', 'покедово'),
     "names": ('kylie', 'кайли'),  
-    # "tbd": ('сколько', 'который', 'какой', 'какая', 'что', 'хочу', 'сегодня',
-    #         'какое', 'добавь', 'напиши', 'давай', 'статистика', 'статистику по'),
+    # "tbd": ('сколько', 'который', 'какой', 'какая', 'что', 'хочу', 'сегодня', 'расскажи'.
+    #         'какое', 'добавь', 'напиши', 'давай', 'статистика', 'статистику по', 'смени'),
     "dialogue": ('говор', 'болта'),
     "coronavirus": ('corona', 'virus', 'covid', 'коронавирус', 'ковид'),
     "time": ('час', 'врем', 'time'),
@@ -47,7 +47,7 @@ opts = {
     "jokes": ('шутк', 'анекдот', 'пошути', 'развесели', 'рассмеши'),
     "radio": ('песн', 'радио', 'музык', 'музло', 'дэнс'),
     "chname": ('имя'),
-    "monetka": ('орёл', 'решка', 'монетк'),
+    "monetka": ('орёл', 'орел', 'решк', 'монетк'),
     "kost": ('кост', 'кубик'),
     "weather": ('погод', 'weather',),
     "tales": ('сказ', 'fairy tale'),
@@ -57,10 +57,13 @@ opts = {
     "open_site": ('site', 'сайт'),
     "exes": ('програм', 'приложен'),
     "entry_words": ("Привет", "Bonjour", "Здравствуй", "Рада видеть тебя снова", "Я уж думала не придёшь"),
-	"exit_words": ("Ciao",  "Goodbye", "Пока", "До скорого", "До свидания", "До встречи"),
-	"thnxs": ('спасибо', 'благодарю'),
-	"rudes": ('дура', 'стерв', 'дуро'),
-	"helloes": ('привет', 'здравствуй')
+    "exit_words": ("Ciao",  "Goodbye", "Пока", "До скорого", "До свидания", "До встречи"),
+    "thnxs": ('пасиб', 'благодар'),
+    "rudes": ('дур', 'стерв', 'сук', 'нах', 'скотин', 'сволоч', 'паскуд', 'хуй'), #убрал пару лишних окончаний и добавил новые маты
+    "helloes": ('привет', 'здравствуй'),
+    "news": ('новост', 'news', 'событ'), # добавил словарь для новостей
+    "voice": ('голос'),
+    "user_name": ('пользовател')
 }
 
 
@@ -128,38 +131,38 @@ def say(string):
 
 
 def settings_json(action, key, added_item=None):
-	global settings
-	with open('settings.json', 'r') as f:
-		settings = json.load(f)
-	if action == 'add':
-		settings[key] = added_item
-		with open('settings.json', 'w') as f:
-			json.dump(settings, f)
-	elif action == 'dlt':
-		settings[key] = None
-		with open('settings.json', 'w') as f:
-			json.dump(settings, f)
-	elif action == 'edit':
-		settings[key] = added_item
-		with open('settings.json', 'w') as f:
-			json.dump(settings, f)
-	else:
-		return 0
-	with open('settings.json', 'r') as f:
-		settings = json.load(f)
+    global settings
+    with open('settings.json', 'r') as f:
+        settings = json.load(f)
+    if action == 'add':
+        settings[key] = added_item
+        with open('settings.json', 'w') as f:
+            json.dump(settings, f)
+    elif action == 'dlt':
+        settings[key] = None
+        with open('settings.json', 'w') as f:
+            json.dump(settings, f)
+    elif action == 'edit':
+        settings[key] = added_item
+        with open('settings.json', 'w') as f:
+            json.dump(settings, f)
+    else:
+        return 0
+    with open('settings.json', 'r') as f:
+        settings = json.load(f)
 
-	return 1
+    return 1
 
 
 def assistant_voice_change():
-	if settings['assistant_voice'] == 'woman':
-		voice.setProperty('voice', ASSISTANT_VOICE_woman)
-	elif settings['assistant_voice'] == 'man':
-		voice.setProperty('voice', ASSISTANT_VOICE_man)
-	else:
-		voice.setProperty('voice', ASSISTANT_VOICE_woman)
-		
-	return 1
+    if settings['assistant_voice'] == 'woman':
+        voice.setProperty('voice', ASSISTANT_VOICE_woman)
+    elif settings['assistant_voice'] == 'man':
+        voice.setProperty('voice', ASSISTANT_VOICE_man)
+    else:
+        voice.setProperty('voice', ASSISTANT_VOICE_woman)
+        
+    return 1
 
 
 def exit_function():
@@ -328,7 +331,7 @@ def wikipedia(query):  # TODO except func
     return txt[ : txt.find("\n")]
 
 
-def rude_repl():
+def rudes_repl(): # не было различий
     rudes_repl = ['так говорить неприлично', 'обидно так-то', 'ну зачем вы так', 'не хорошо так выражаться']
 
     return random.choice(rudes_repl)
@@ -340,6 +343,9 @@ def thnx_repl():
 
     return random.choice(thnxs_repl)
 
+def hello():
+    helloes = ['Здравствуй', 'Bonjour', 'Привет', 'Рада тебя видеть']
+    return random.choice(helloes)
 
 def news():
     r = requests.get('https://news.tut.by/world')
@@ -347,9 +353,11 @@ def news():
     res = []
     html.select('.news-section')
     for el in html.select('.entry-head')[8:13:]:
-    	res.append(el.text.replace('\xa0', ' '))
+        res.append(el.text.replace('\xa0', ' '))
+    print('Новости на данный момент')
+    for i in res:
+        print('- ', i) #слегка изменил функцию новостей
 
-    return res
 
 
 # def exchange_rates():
@@ -365,22 +373,46 @@ def news():
 
 
 def main(request):
+    for el in opts['helloes']:
+        if el in request:
+            print(hello())
+    for el in opts['thnxs']:
+        if el in request:
+            print(thnx_repl())
+    for el in opts['holiday']:
+        if el in request:
+            print(holiday())
+    for el in opts['kost']:
+        if el in request:
+            print(dice())
+    for el in opts['monetka']:
+        if el in request:
+            print(coin())
+    for el in opts['pass_gen']:
+        if el in request:
+            print(pass_gen())
     for el in opts['coronavirus']:
-    	if el in request:
-    		print(coronavirus())
+        if el in request:
+            print(coronavirus())
     for el in opts['jokes']:
-    	if el in request:
-    		print(joke())
+        if el in request:
+            print(joke())
     for el in opts['tales']:
-    	if el in request:
-    		print(tale())
+        if el in request:
+            print(tale())
+    for el in opts['news']:
+        if el in request:
+            print(news())
+    for el in opts['rudes']:
+        if el in request:
+            print(rudes_repl())
     for el in opts['exit']:
-    	if el in request:
-    		print(exit_function())
-    		exit()
+        if el in request:
+            print(exit_function())
+            exit()
 
 
 
 while True:
-	request = input('>> ').lower()
-	main(request)
+    request = input('>> ').lower()
+    main(request)
