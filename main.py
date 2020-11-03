@@ -17,6 +17,8 @@ from bs4 import BeautifulSoup as bs
 import random
 import wikipedia as wiki
 import json
+import phrases
+
 
 with open('settings.json', 'r') as f:
     settings = json.load(f)
@@ -27,12 +29,18 @@ voice = pyttsx3.init(driverName='sapi5')
 voice.setProperty('rate', 175)
 voice.setProperty('volume', 0.9)
 voice.setProperty('voice', ASSISTANT_VOICE_woman)
+
 if settings['assistant_voice'] == 'woman':
     voice.setProperty('voice', ASSISTANT_VOICE_woman)
+    _phrases = phrases.WOMAN_phrases
 elif settings['assistant_voice'] == 'man':
     voice.setProperty('voice', ASSISTANT_VOICE_man)
+    _phrases = phrases.MAN_phrases
 else:
     voice.setProperty('voice', ASSISTANT_VOICE_woman)
+    _phrases = phrases.WOMAN_phrases
+
+
 
 opts = {
     "exit": ('goodbye', 'bye', 'qq', 'выход', 'выйти', 'выйди', 'закончить', 'пока', 'прощай',
@@ -63,7 +71,7 @@ opts = {
     "helloes": ('привет', 'здравствуй'),
     "news": ('новост', 'news', 'событ'), 
     "voice": ('голос'),
-    "user_name": ('пользовател')
+    "user_name": ('пользовател', 'имя')
 }
 
 
@@ -97,18 +105,6 @@ tales = ["Расскажу тебе сказку, как дед насрал в 
          "Я вам уже рассказывала",
          "Увы, Я плохо рассказываю сказки",
          "Я думаю вы и сами их знаете"]
-
-
-# jokes = {
-#        '0': "Колобок повесился. ахахахахах",
-#        '1': "Да что вы такое говорите?! Не бил я её! Я просто дал пять по лицу.",
-#        '2': "Жил-был царь. У него было косоглазие. Пошёл он однажды куда глаза глядят и порвался.",
-#        '3': "А по-нормальному ты говорить умеешь? Ответ, к сожалению, не да...",
-#        '4': "Настя упала и разбила подбородок. Но ничего страшного, ведь у неё есть второй!",
-#        '5': "Толстые стриптизёрши иногда перегибают палку.",
-#        '6': "Привет, я на спрашивай точка ру. Задавай вопросики! А я на иди нафиг точка ру. Получай ответики.",
-#        '7': "Спросил как-то один голосовой ассистент другого.... хотя ладно. Забудьте",
-#        '8': "Боюсь вы не поймёте моих шуток"}
 
 jokes = [
         "Колобок повесился. ахахахахах",
@@ -161,6 +157,7 @@ def assistant_voice_change():
         voice.setProperty('voice', ASSISTANT_VOICE_man)
     else:
         voice.setProperty('voice', ASSISTANT_VOICE_woman)
+
         
     return 1
 
@@ -332,20 +329,18 @@ def wikipedia(query):  # TODO except func
 
 
 def rudes_repl(): # не было различий
-    rudes_repl = ['так говорить неприлично', 'обидно так-то', 'ну зачем вы так', 'не хорошо так выражаться']
+    rudes_repl = ('так говорить неприлично', 'обидно так-то', 'ну зачем вы так', 'не хорошо так выражаться')
 
     return random.choice(rudes_repl)
 
 
 def thnx_repl():
-    thnxs_repl = ['всегда пожалуйста', 'рада помочь', 'рада стараться', 'пожалуйста', 'рада что угодила',
-                  'надеюсь помогла']
-
-    return random.choice(thnxs_repl)
+    
+    return random.choice(_phrases['thnxs_repl'])
 
 def hello():
-    helloes = ['Здравствуй', 'Bonjour', 'Привет', 'Рада тебя видеть']
-    return random.choice(helloes)
+    
+    return random.choice(_phrases['helloes'])
 
 def news():
     r = requests.get('https://news.tut.by/world')
@@ -371,6 +366,7 @@ def news():
 
 
 def main(request):
+    print(hello())
     for el in opts['helloes']:
         if el in request:
             print(hello())
@@ -410,7 +406,7 @@ def main(request):
             exit()
 
 
-
+print(hello())
 while True:
     request = input('>> ').lower()
     main(request)
