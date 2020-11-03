@@ -28,5 +28,9 @@ $RECYCLE.BIN/
 *.lnk
 
 # JSON files
+*.json
 
+#mp3 files
+*.mp3
+*.wav
 # End of https://www.toptal.com/developers/gitignore/api/windows
