@@ -4,13 +4,13 @@
 """!!СТАРАТЬСЯ ПО МАКСИМУМУ ПРИДЕРЖИВАТЬСЯ PEP8!!"""
 
 # import datetime
-# import webbrowser
 # import speech_recognition as sr
-# import time
+import time
 # import win32com.client
 # import subprocess
 # from pygame import mixer
 
+import webbrowser
 import pyttsx3
 import requests
 from bs4 import BeautifulSoup as bs
@@ -18,7 +18,7 @@ import random
 import wikipedia as wiki
 import json
 
-with open('settings.json', 'r') as f:
+with open('C:/Users/User/Desktop/assistant/settings.json', 'r') as f:
     settings = json.load(f)
 
 ASSISTANT_VOICE_man = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Alan+Aleksandr'
@@ -64,7 +64,8 @@ opts = {
     "news": ('новост', 'news', 'событ'), 
     "voice": ('голос'),
     "user_name": ('пользовател'),
-    "calculator": ('калькулятор')
+    "calculator": ('калькулятор'),
+    "search": ('найди', 'найти', 'поищи', 'ищи')
 }
 
 
@@ -358,68 +359,23 @@ def news():
     
     return res
 
-def calculator(var, a: int, b: int):
-    while True:
-        if var == "+":
-            while True:
-                if a == 'x':
-                    break
-                if b == 'x':
-                    break
-                try:
-                    result = 'result = ' + str(int(a) + int(b))
-                except ValueError:
-                    print('Ошибка! Вы ввели букву, или пропуск.')
-                    print('Повторите попытку, введя число')
-                else:
-                    break
-
-        elif var == "+":
-            while True:
-                if a == 'x':
-                    break
-                if b == 'x':
-                    break
-                try:
-                    result = 'result = ' + str(int(a) - int(b))
-                except ValueError:
-                    print('Ошибка! Вы ввели букву, или пропуск.')
-                    print('Повторите попытку, введя число')
-                else:
-                    break
-
-        elif var == "+":
-            while True:
-                if a == 'x':
-                    break
-                if b == 'x':
-                    break
-                try:
-                    result = 'result = ' + str(int(a) * int(b))
-                except ValueError:
-                    print('Ошибка! Вы ввели букву, или пропуск.')
-                    print('Повторите попытку, введя число')
-                else:
-                    break
-
-        if var == "/":
-            while True:
-                if a == 'x':
-                    break
-                if b == 'x':
-                    break
-                try:
-                    result = 'result = ' + str(int(a) * int(b))
-                except ValueError:
-                    print('Ошибка! Вы ввели букву, или пропуск.')
-                    print('Повторите попытку, введя число')
-                else:
-                    break
-                except ZeroDivisionError:
-                    print('Ошибка! На ноль делить нельзя!')
-        if var == 'x':
-            break
-        return result
+#def calculator(var, a: int, b: int):
+#    if var == "+":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) + int(b)))
+#
+#    elif var == "+":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) - int(b)))
+#
+#    elif var == "+":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) * int(b)))
+#
+#    elif var == "/":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) * int(b)))
+#
+#    elif var == 'x':
+#        exit()
+#
+#    return result
 
 # def exchange_rates():
 #     r = requests.get('https://myfin.by/currency/minsk')
@@ -440,14 +396,19 @@ def main(request):
     for el in opts['thnxs']:
         if el in request:
             print(thnx_repl())
-    for el in opts['calculator']:
+    for el in opts['search']:
         if el in request:
-            print('Введите вариант')
-            calc_var = input('>> ')
-            first_num = input('Первое число\n>> ')
-            second_num = input('Второе число\n>> ')
-            print(calculator(calc_var, first_num, second_num))
-
+            search = input('Введите запрос для поисковой строки\n>> ')
+            print('Открываю результат по запросу: "' + search + '"')
+            time.sleep(2)
+            webbrowser.open_new_tab('https://www.google.by/search?q=' + str(search))
+#    for el in opts['calculator']:
+#        if el in request:
+#            print('Введите вариант')
+#            calc_var = input('>> ')
+#            first_num = input('Первое число\n>> ')
+#            second_num = input('Второе число\n>> ')
+#            print(calculator(calc_var, first_num, second_num))
     for el in opts['holiday']:
         if el in request:
             print(holiday())
