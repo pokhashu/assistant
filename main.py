@@ -4,13 +4,13 @@
 """!!СТАРАТЬСЯ ПО МАКСИМУМУ ПРИДЕРЖИВАТЬСЯ PEP8!!"""
 
 # import datetime
-# import webbrowser
 # import speech_recognition as sr
-# import time
+import time
 # import win32com.client
 # import subprocess
 # from pygame import mixer
 
+import webbrowser
 import pyttsx3
 import requests
 from bs4 import BeautifulSoup as bs
@@ -18,7 +18,7 @@ import random
 import wikipedia as wiki
 import json
 
-with open('settings.json', 'r') as f:
+with open('C:/Users/User/Desktop/assistant/settings.json', 'r') as f:
     settings = json.load(f)
 
 ASSISTANT_VOICE_man = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Alan+Aleksandr'
@@ -63,7 +63,9 @@ opts = {
     "helloes": ('привет', 'здравствуй'),
     "news": ('новост', 'news', 'событ'), 
     "voice": ('голос'),
-    "user_name": ('пользовател')
+    "user_name": ('пользовател'),
+    "calculator": ('калькулятор'),
+    "search": ('найди', 'найти', 'поищи', 'ищи')
 }
 
 
@@ -357,6 +359,23 @@ def news():
     
     return res
 
+#def calculator(var, a: int, b: int):
+#    if var == "+":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) + int(b)))
+#
+#    elif var == "+":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) - int(b)))
+#
+#    elif var == "+":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) * int(b)))
+#
+#    elif var == "/":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) * int(b)))
+#
+#    elif var == 'x':
+#        exit()
+#
+#    return result
 
 # def exchange_rates():
 #     r = requests.get('https://myfin.by/currency/minsk')
@@ -377,6 +396,19 @@ def main(request):
     for el in opts['thnxs']:
         if el in request:
             print(thnx_repl())
+    for el in opts['search']:
+        if el in request:
+            search = input('Введите запрос для поисковой строки\n>> ')
+            print('Открываю результат по запросу: "' + search + '"')
+            time.sleep(2)
+            webbrowser.open_new_tab('https://www.google.by/search?q=' + str(search))
+#    for el in opts['calculator']:
+#        if el in request:
+#            print('Введите вариант')
+#            calc_var = input('>> ')
+#            first_num = input('Первое число\n>> ')
+#            second_num = input('Второе число\n>> ')
+#            print(calculator(calc_var, first_num, second_num))
     for el in opts['holiday']:
         if el in request:
             print(holiday())
