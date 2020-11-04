@@ -10,6 +10,7 @@ import time
 # import subprocess
 # from pygame import mixer
 
+from sound import Sound
 import webbrowser
 import pyttsx3
 import requests
@@ -48,7 +49,7 @@ opts = {
     "radio": ('песн', 'радио', 'музык', 'музло', 'дэнс'),
     "chname": ('имя'),
     "monetka": ('орёл', 'орел', 'решк', 'монетк'),
-    "kost": ('кост', 'кубик'),
+    "kost": ('кубик'), # убрал кост, совпадало с громКОСТ... Возможно есть еще совпадения
     "weather": ('погод', 'weather',),
     "tales": ('сказ', 'fairy tale'),
     "pass_gen": ('парол', 'password'),
@@ -65,14 +66,8 @@ opts = {
     "voice": ('голос'),
     "user_name": ('пользовател'),
     "calculator": ('калькулятор'),
-    "search": ('найди', 'найти', 'поищи', 'ищи')
-	"exit_words": ("Ciao",  "Goodbye", "Пока", "До скорого", "До свидания", "До встречи"),
-	"thnxs": ('пасиб', 'благодар'),
-	"rudes": ('дур', 'стерв', 'сук', 'нах', 'скотин', 'сволоч', 'паскуд', 'хуй'), #убрал пару лишних окончаний и добавил новые маты
-	"helloes": ('привет', 'здравствуй'),
-    "news": ('новост', 'news', 'событ'), # добавил словарь для новостей
-    "voice": ('голос'),
-    "user_name": ('пользовател')
+    "search": ('найди', 'поищи'),
+    "volume": ('громкост')
 }
 
 
@@ -354,7 +349,14 @@ def thnx_repl():
 
 def hello():
     helloes = ['Здравствуй', 'Bonjour', 'Привет', 'Рада тебя видеть']
+
     return random.choice(helloes)
+
+def volume(option):
+    if option == 'мут':
+        Sound.mute()
+    if option != 'мут':
+        Sound.volume_set(int(option))
 
 def news():
     r = requests.get('https://news.tut.by/world')
@@ -365,27 +367,16 @@ def news():
         res.append(el.text.replace('\xa0', ' '))
     
     return res
-    	res.append(el.text.replace('\xa0', ' '))
-    print('Новости на данный момент')
-    for i in res:
-        print('- ', i) #слегка изменил функцию новостей
 
 #def calculator(var, a: int, b: int):
 #    if var == "+":
 #        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) + int(b)))
-#
-#    elif var == "+":
+#    elif var == "-":
 #        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) - int(b)))
-#
-#    elif var == "+":
+#    elif var == "*":
 #        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) * int(b)))
-#
 #    elif var == "/":
-#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) * int(b)))
-#
-#    elif var == 'x':
-#        exit()
-#
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) / int(b)))
 #    return result
 
 # def exchange_rates():
@@ -404,15 +395,29 @@ def main(request):
     for el in opts['helloes']:
         if el in request:
             print(hello())
+        else:
+            break
     for el in opts['thnxs']:
         if el in request:
             print(thnx_repl())
+        else:
+            break
+    for el in opts['volume']:
+        if el in request:
+            vol = input('Введите какую громкость установить\n>> ')
+            volume(vol) # наверно починил все, кроме калькулятора
+            break
+        else:
+            break
     for el in opts['search']:
         if el in request:
             search = input('Введите запрос для поисковой строки\n>> ')
             print('Открываю результат по запросу: "' + search + '"')
             time.sleep(2)
             webbrowser.open_new_tab('https://www.google.by/search?q=' + str(search))
+            break
+        else:
+            break
 #    for el in opts['calculator']:
 #        if el in request:
 #            print('Введите вариант')
@@ -420,35 +425,53 @@ def main(request):
 #            first_num = input('Первое число\n>> ')
 #            second_num = input('Второе число\n>> ')
 #            print(calculator(calc_var, first_num, second_num))
+#        else:
+#            break
     for el in opts['holiday']:
         if el in request:
             print(holiday())
+        else:
+            break
     for el in opts['kost']:
         if el in request:
             print(dice())
+        else:
+            break
     for el in opts['monetka']:
         if el in request:
             print(coin())
+        else:
+            break
     for el in opts['pass_gen']:
         if el in request:
             print(pass_gen())
+        else:
+            break
     for el in opts['coronavirus']:
         if el in request:
             print(coronavirus())
+        else:
+            break
     for el in opts['jokes']:
         if el in request:
             print(joke())
+        else:
+            break
     for el in opts['tales']:
         if el in request:
             print(tale())
-    	if el in request:
-    		print(tale())
+        else:
+            break
     for el in opts['news']:
         if el in request:
             print(news())
+        else:
+            break
     for el in opts['rudes']:
         if el in request:
             print(rudes_repl())
+        else:
+            break
     for el in opts['exit']:
         if el in request:
             print(exit_function())
