@@ -49,7 +49,7 @@ opts = {
     "radio": ('песн', 'радио', 'музык', 'музло', 'дэнс'),
     "chname": ('имя'),
     "monetka": ('орёл', 'орел', 'решк', 'монетк'),
-    "kost": ('кост', 'кубик'),
+    "kost": ('кубик'), # убрал кост, совпадало с громКОСТ... Возможно есть еще совпадения
     "weather": ('погод', 'weather',),
     "tales": ('сказ', 'fairy tale'),
     "pass_gen": ('парол', 'password'),
@@ -69,6 +69,8 @@ opts = {
     "search": ('найди', 'найти', 'поищи', 'ищи'),
     "vol": ('громкост')
 
+    "search": ('найди', 'поищи'),
+    "volume": ('громкост')
 }
 
 
@@ -350,10 +352,16 @@ def thnx_repl():
 
 def hello():
     helloes = ['Здравствуй', 'Bonjour', 'Привет', 'Рада тебя видеть']
+
     return random.choice(helloes)
 
 def brows(sear):
     webbrowser.open_new_tab('https://www.google.by/search?q=' + str(sear))
+def volume(option):
+    if option == 'мут':
+        Sound.mute()
+    if option != 'мут':
+        Sound.volume_set(int(option))
 
 def news():
     r = requests.get('https://news.tut.by/world')
@@ -376,6 +384,18 @@ def calculator(var, a: int, b: int):
         result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) / int(b)))
 
     return result
+    return res
+
+#def calculator(var, a: int, b: int):
+#    if var == "+":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) + int(b)))
+#    elif var == "-":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) - int(b)))
+#    elif var == "*":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) * int(b)))
+#    elif var == "/":
+#        result = str(a) + ' ' + str(var) + ' ' + str(b) + ' = ' + (str(int(a) / int(b)))
+#    return result
 
 # def exchange_rates():
 #     r = requests.get('https://myfin.by/currency/minsk')
@@ -410,6 +430,10 @@ def main(request):
             volume = int(input('>> '))
             Sound.volume_set(volume)
             print('Установлена громкость системы: "' + str(volume) + '"')
+    for el in opts['volume']:
+        if el in request:
+            vol = input('Введите какую громкость установить\n>> ')
+            volume(vol) # наверно починил все, кроме калькулятора
             break
         else:
             break
@@ -431,6 +455,22 @@ def main(request):
             first_num = input('Первое число\n>> ')
             second_num = input('Второе число\n>> ')
             print(calculator(calc_var, first_num, second_num))
+            webbrowser.open_new_tab('https://www.google.by/search?q=' + str(search))
+            break
+        else:
+            break
+#    for el in opts['calculator']:
+#        if el in request:
+#            print('Введите вариант')
+#            calc_var = input('>> ')
+#            first_num = input('Первое число\n>> ')
+#            second_num = input('Второе число\n>> ')
+#            print(calculator(calc_var, first_num, second_num))
+#        else:
+#            break
+    for el in opts['holiday']:
+        if el in request:
+            print(holiday())
         else:
             break
     for el in opts['kost']:
