@@ -23,8 +23,9 @@ import phrases
 with open('settings.json', 'r') as f:
     settings = json.load(f)
 
-ASSISTANT_VOICE_man = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Alan+Aleksandr'
-ASSISTANT_VOICE_woman = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_RU-RU_IRINA_11.0' #'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Irina'
+ASSISTANT_VOICE_man = r'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Alan+Aleksandr'
+ASSISTANT_VOICE_woman = r'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\Tokens\TTS_MS_RU-RU_IRINA_11.0'
+# 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Speech\Voices\TokenEnums\RHVoice\Irina'
 voice = pyttsx3.init(driverName='sapi5') 
 voice.setProperty('rate', 175)
 voice.setProperty('volume', 0.9)
@@ -41,7 +42,6 @@ else:
     _phrases = phrases.WOMAN_phrases
 
 
-
 opts = {
     "exit": ('goodbye', 'bye', 'qq', 'выход', 'выйти', 'выйди', 'закончить', 'пока', 'прощай',
              'досвидания', 'завершение', 'покедово'),
@@ -54,7 +54,7 @@ opts = {
     "date": ('дат', 'число'),
     "jokes": ('шутк', 'анекдот', 'пошути', 'развесели', 'рассмеши'),
     "radio": ('песн', 'радио', 'музык', 'музло', 'дэнс'),
-    "chname": ('имя'),
+    "chname": ('имя', 'name'),
     "monetka": ('орёл', 'орел', 'решк', 'монетк'),
     "kost": ('кост', 'кубик'),
     "weather": ('погод', 'weather',),
@@ -70,7 +70,7 @@ opts = {
     "rudes": ('дур', 'стерв', 'сук', 'нах', 'скотин', 'сволоч', 'паскуд', 'хуй'), 
     "helloes": ('привет', 'здравствуй'),
     "news": ('новост', 'news', 'событ'), 
-    "voice": ('голос'),
+    "voice": ('голос', 'voice'),
     "user_name": ('пользовател', 'имя')
 }
 
@@ -128,24 +128,24 @@ def say(string):
 
 def settings_json(action, key, added_item=None):
     global settings
-    with open('settings.json', 'r') as f:
-        settings = json.load(f)
+    with open('settings.json', 'r') as file:
+        settings = json.load(file)
     if action == 'add':
         settings[key] = added_item
-        with open('settings.json', 'w') as f:
-            json.dump(settings, f)
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file)
     elif action == 'dlt':
         settings[key] = None
-        with open('settings.json', 'w') as f:
-            json.dump(settings, f)
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file)
     elif action == 'edit':
         settings[key] = added_item
-        with open('settings.json', 'w') as f:
-            json.dump(settings, f)
+        with open('settings.json', 'w') as file:
+            json.dump(settings, file)
     else:
         return 0
-    with open('settings.json', 'r') as f:
-        settings = json.load(f)
+    with open('settings.json', 'r') as file:
+        settings = json.load(file)
 
     return 1
 
@@ -158,7 +158,6 @@ def assistant_voice_change():
     else:
         voice.setProperty('voice', ASSISTANT_VOICE_woman)
 
-        
     return 1
 
 
@@ -259,6 +258,9 @@ def coronavirus():
     r = requests.get('https://www.worldometers.info/coronavirus/')
     html = bs(r.content, 'html.parser')
     temp = 0
+    common = 0
+    died = 0
+    recovered = 0
     # now = datetime.now()
     res += "Статистика по коронавирусу на сегодня.\n"
     for el in html.select('.maincounter-number'):
@@ -266,7 +268,7 @@ def coronavirus():
         if temp == 0:
             common = number[0].text
             common = common.strip()
-            #res += "Всего случаев: " + common
+            # res += "Всего случаев: " + common
             common = common.replace(',', '')
             if len(common) >= 7:
                 i = common[-6:len(common)]
@@ -277,7 +279,7 @@ def coronavirus():
         elif temp == 1:
             died = number[0].text
             died = died.strip()
-            #print("Умерло: " + died)
+            # print("Умерло: " + died)
             died = died.replace(',', '')
             if len(died) >= 7:
                 i = died[-6:len(died)]
@@ -288,7 +290,7 @@ def coronavirus():
         elif temp == 2:
             recovered = number[0].text
             recovered = recovered.strip()
-            #print("Выздоровело: " + recovered)
+            # print("Выздоровело: " + recovered)
             recovered = recovered.replace(',', '')
             if len(recovered) >= 7:
                 i = recovered[-6:len(recovered)]
@@ -309,7 +311,7 @@ def coronavirus():
         if temp % 3 == 0:
             ill += ','
     ill = ill[::-1]
-    #print("Болеет: " + ill)
+    # print("Болеет: " + ill)
     ill = ill.replace('.', '')
     if len(ill) >= 7:
         i = ill_[-6:len(ill)]
@@ -325,10 +327,10 @@ def wikipedia(query):  # TODO except func
     wiki.set_lang('ru')
     txt = wiki.summary(query)
 
-    return txt[ : txt.find("\n")]
+    return txt[:txt.find("\n")]
 
 
-def rudes_repl(): # не было различий
+def rudes_repl():  # не было различий
     rudes_repl = ('так говорить неприлично', 'обидно так-то', 'ну зачем вы так', 'не хорошо так выражаться')
 
     return random.choice(rudes_repl)
@@ -338,9 +340,11 @@ def thnx_repl():
     
     return random.choice(_phrases['thnxs_repl'])
 
+
 def hello():
     
     return random.choice(_phrases['helloes'])
+
 
 def news():
     r = requests.get('https://news.tut.by/world')
@@ -365,48 +369,49 @@ def news():
 #     print(html.select('td'))
 
 
-def main(request):
+def main(r):
     print(hello())
     for el in opts['helloes']:
-        if el in request:
-            print(hello())
+        if el in r:
+            return hello()
     for el in opts['thnxs']:
-        if el in request:
-            print(thnx_repl())
+        if el in r:
+            return thnx_repl()
     for el in opts['holiday']:
-        if el in request:
-            print(holiday())
+        if el in r:
+            return holiday()
     for el in opts['kost']:
-        if el in request:
-            print(dice())
+        if el in r:
+            return dice()
     for el in opts['monetka']:
-        if el in request:
-            print(coin())
+        if el in r:
+            return coin()
     for el in opts['pass_gen']:
-        if el in request:
-            print(pass_gen())
+        if el in r:
+            return pass_gen()
     for el in opts['coronavirus']:
-        if el in request:
-            print(coronavirus())
+        if el in r:
+            return coronavirus()
     for el in opts['jokes']:
-        if el in request:
-            print(joke())
+        if el in r:
+            return joke()
     for el in opts['tales']:
-        if el in request:
-            print(tale())
+        if el in r:
+            return tale()
     for el in opts['news']:
-        if el in request:
-            print(news())
+        if el in r:
+            return news()
     for el in opts['rudes']:
-        if el in request:
-            print(rudes_repl())
+        if el in r:
+            return rudes_repl()
     for el in opts['exit']:
-        if el in request:
+        if el in r:
             print(exit_function())
             exit()
+    return -1
 
 
 print(hello())
 while True:
     request = input('>> ').lower()
-    main(request)
+    print(main(request))
