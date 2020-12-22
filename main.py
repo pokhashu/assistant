@@ -4,9 +4,7 @@
 """!!СТАРАТЬСЯ ПО МАКСИМУМУ ПРИДЕРЖИВАТЬСЯ PEP8!!"""
 
 # import datetime
-# import webbrowser
 # import speech_recognition as sr
-# import time
 # import win32com.client
 # import subprocess
 # from pygame import mixer
@@ -18,6 +16,8 @@ import random
 import wikipedia as wiki
 import json
 import phrases
+import webbrowser
+import time # импорт нужных модулей
 
 
 with open('settings.json', 'r') as f:
@@ -71,7 +71,8 @@ opts = {
     "helloes": ('привет', 'здравствуй'),
     "news": ('новост', 'news', 'событ'), 
     "voice": ('голос', 'voice'),
-    "user_name": ('пользовател', 'имя')
+    "user_name": ('пользовател', 'имя'),
+    "search": ('найди', 'поищи', 'search')
 }
 
 
@@ -330,7 +331,7 @@ def wikipedia(query):  # TODO except func
     return txt[:txt.find("\n")]
 
 
-def rudes_repl():  # не было различий
+def rudes_repl():
     rudes_repl = ('так говорить неприлично', 'обидно так-то', 'ну зачем вы так', 'не хорошо так выражаться')
 
     return random.choice(rudes_repl)
@@ -369,14 +370,19 @@ def news():
 #     print(html.select('td'))
 
 
-def main(r):
-    print(hello())
+def main(r): # удалил из функции лишинй принт
     for el in opts['helloes']:
         if el in r:
             return hello()
     for el in opts['thnxs']:
         if el in r:
             return thnx_repl()
+    for el in opts['search']:  # функция поиска
+        if el in r:
+            serh = input('Введите запрос для поисковой строки\n>> ')
+            print('Открываю результат по запросу: "' + serh + '"')
+            time.sleep(2)
+            webbrowser.open_new_tab('https://www.google.by/search?q=' + str(serh))
     for el in opts['holiday']:
         if el in r:
             return holiday()
